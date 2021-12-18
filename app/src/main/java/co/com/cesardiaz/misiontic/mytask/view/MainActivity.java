@@ -1,4 +1,5 @@
 package co.com.cesardiaz.misiontic.mytask.view;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,6 @@ import co.com.cesardiaz.misiontic.mytask.view.adapter.TaskAdapter;
 import co.com.cesardiaz.misiontic.mytask.view.dto.TaskItem;
 
 
-
 public class MainActivity extends AppCompatActivity implements MainMVP.View {
 
     private TextInputLayout tilNewTask;
@@ -33,22 +33,15 @@ public class MainActivity extends AppCompatActivity implements MainMVP.View {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         presenter = new MainPresenter(MainActivity.this);
-
         initUI(); // método inferior
         presenter.loadTasks();
     }
 
     private void initUI() {
         tilNewTask = findViewById(R.id.til_new_task);
-        tilNewTask.setEndIconOnClickListener(v -> {
-            Toast.makeText(MainActivity.this, "Add new task to list", Toast.LENGTH_SHORT)
-                    .show();
-        });
-
+        tilNewTask.setEndIconOnClickListener(v -> presenter.addNewTask());
         etNewTask = findViewById(R.id.et_new_task);
-
         taskAdapter = new TaskAdapter();
         rvTasks = findViewById(R.id.rv_tasks);
         rvTasks.setLayoutManager(new LinearLayoutManager(MainActivity.this));
@@ -58,7 +51,16 @@ public class MainActivity extends AppCompatActivity implements MainMVP.View {
     @Override
     public void showTaskList(List<TaskItem> items) {
         taskAdapter.setData(items);
+    }
 
+    @Override
+    public String getTaskDescription() {
+        return etNewTask.getText().toString();
+    }
+
+    @Override
+    public void addTaskToList(TaskItem task) {
+        taskAdapter.addItem(task);
     }
 }
 

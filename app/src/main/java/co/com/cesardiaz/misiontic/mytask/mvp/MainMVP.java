@@ -12,6 +12,8 @@ public interface MainMVP {
         default List<TaskItem> getTasks() {
             return null;
         }
+
+        void saveTask(TaskItem task);
     }
 
     interface Presenter {
@@ -24,5 +26,9 @@ public interface MainMVP {
     interface View {
 
         void showTaskList(List<TaskItem> items);
+
+        String getTaskDescription();
+
+        void addTaskToList(TaskItem task);
     }
 }
