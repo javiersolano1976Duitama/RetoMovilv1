@@ -8,23 +8,18 @@ public interface MainMVP {
 
 
     interface Model {
-
         default List<TaskItem> getTasks() {
             return null;
         }
-
         void saveTask(TaskItem task);
     }
 
     interface Presenter {
         void loadTasks();
-
         void addNewTask();
     }
 
-
     interface View {
-
         void showTaskList(List<TaskItem> items);
 
         String getTaskDescription();

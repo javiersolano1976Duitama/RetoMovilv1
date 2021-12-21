@@ -28,6 +28,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void addItem(TaskItem item) {
+
         data.add(item);
         notifyItemInserted(data.size() - 1);
     }
