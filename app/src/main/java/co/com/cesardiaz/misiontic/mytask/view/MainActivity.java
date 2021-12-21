@@ -1,23 +1,25 @@
 package co.com.cesardiaz.misiontic.mytask.view;
-import java.text.BreakIterator;
-import java.util.ArrayList;
-import java.util.List;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.List;
 
 import co.com.cesardiaz.misiontic.mytask.R;
 import co.com.cesardiaz.misiontic.mytask.mvp.MainMVP;
 import co.com.cesardiaz.misiontic.mytask.presenter.MainPresenter;
 import co.com.cesardiaz.misiontic.mytask.view.adapter.TaskAdapter;
 import co.com.cesardiaz.misiontic.mytask.view.dto.TaskItem;
-
 
 public class MainActivity extends AppCompatActivity implements MainMVP.View {
 
@@ -28,14 +30,15 @@ public class MainActivity extends AppCompatActivity implements MainMVP.View {
     private TaskAdapter taskAdapter;
 
     private MainMVP.Presenter presenter;
-    private TaskItem task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         presenter = new MainPresenter(MainActivity.this);
-        initUI(); // método inferior
+
+        initUI();
         presenter.loadTasks();
     }
 
@@ -46,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements MainMVP.View {
         etNewTask = findViewById(R.id.et_new_task);
 
         taskAdapter = new TaskAdapter();
-        taskAdapter.setListener(item -> presenter.taskItemClicked(item));
+        taskAdapter.setClickListener(item -> presenter.taskItemClicked(item));
+        taskAdapter.setLongClickListener(item -> presenter.taskItemLongClicked(item));
+
         rvTasks = findViewById(R.id.rv_tasks);
         rvTasks.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         rvTasks.setAdapter(taskAdapter);
@@ -70,7 +75,32 @@ public class MainActivity extends AppCompatActivity implements MainMVP.View {
     @Override
     public void updateTask(TaskItem task) {
         taskAdapter.updateTask(task);
+    }
 
+    @Override
+    public void showConfirmDialog(String message, TaskItem task){
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Task selected")
+                .setMessage(message)
+                .setPositiveButton("Yes", (dialog, which) -> presenter.updateTask(task))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    @Override
+    public void showDeleteDialog(String message, TaskItem task) {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Task selected")
+                .setMessage(message)
+                .setPositiveButton("Yes", (dialog, which) -> presenter.deleteTask(task))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    @Override
+    public void deleteTask(TaskItem task) {
+        taskAdapter.removeTask(task);
     }
 }
-

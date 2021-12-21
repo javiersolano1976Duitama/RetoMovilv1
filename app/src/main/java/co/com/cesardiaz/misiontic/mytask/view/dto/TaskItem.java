@@ -33,8 +33,8 @@ public class TaskItem {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        TaskItem item = (TaskItem) o;
-        return description.equals(item.description) && date.equals(item.date);
+        TaskItem taskItem = (TaskItem) o;
+        return description.equals(taskItem.description) && date.equals(taskItem.date);
     }
 
     @Override
