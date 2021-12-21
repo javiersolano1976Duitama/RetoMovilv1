@@ -7,6 +7,7 @@ import java.util.List;
 import co.com.cesardiaz.misiontic.mytask.model.MainInteractor;
 import co.com.cesardiaz.misiontic.mytask.mvp.MainMVP;
 import co.com.cesardiaz.misiontic.mytask.view.dto.TaskItem;
+import co.com.cesardiaz.misiontic.mytask.view.dto.TaskState;
 
 public class MainPresenter implements MainMVP.Presenter {
 
@@ -33,5 +34,12 @@ public class MainPresenter implements MainMVP.Presenter {
         TaskItem task = new TaskItem(description, date);
         model.saveTask(task);
         view.addTaskToList(task);
+    }
+
+    @Override
+    public void taskItemClicked(TaskItem item) {
+        item.setState(TaskState.DONE);
+        model.updateTask(item);
+        view.updateTask(item);
     }
 }

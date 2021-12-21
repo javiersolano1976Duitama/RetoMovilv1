@@ -3,6 +3,7 @@ package co.com.cesardiaz.misiontic.mytask.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import co.com.cesardiaz.misiontic.mytask.view.dto.TaskState;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<TaskItem> data;
+    private OnItemClickListener Listener;
 
     public TaskAdapter() {
         data = new ArrayList<>();
@@ -35,6 +37,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         notifyItemInserted(data.size() - 1);
     }
 
+    public void setListener(OnItemClickListener listener) {
+        Listener = listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,6 +52,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TaskItem item = data.get(position);
+        if (Listener != null) {
+        holder.itemView.setOnClickListener(v -> Listener.onClick(item));
+        }
         holder.tvDescription.setText(item.getDescription());
         holder.tvDate.setText(item.getDate());
         int color = item.getState()== TaskState.PENDING ? R.color.task_pending: R.color.task_done;
@@ -57,8 +66,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     @Override
-    public int getItemCount() {
-        return data == null ? 0 : data.size();
+    public int getItemCount() { return data == null ? 0 : data.size();    }
+
+    public void updateTask(TaskItem task) {
+        for (int i = 0; i < data.size(); i++){
+            TaskItem item = data.get(i);
+            if (item.getDescription().equals(task.getDescription())
+                && item.getDate().equals(task.getDate())) {
+                item. setState(task.getState());
+                notifyItemChanged(i);
+                break;
+            }
+        }
     }
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
@@ -73,5 +92,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             tvDescription = itemView.findViewById(R.id.tv_description);
             tvDate = itemView.findViewById(R.id.tv_date);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onClick(TaskItem item);
     }
 }

@@ -25,4 +25,9 @@ public class MainInteractor implements MainMVP.Model {
     public void saveTask(TaskItem task) {
         tempItems.add(task);
     }
+
+    @Override
+    public void updateTask(TaskItem item) {
+
+    }
 }
