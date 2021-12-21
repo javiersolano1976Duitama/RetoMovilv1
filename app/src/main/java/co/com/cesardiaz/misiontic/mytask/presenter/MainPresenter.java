@@ -28,7 +28,7 @@ public class MainPresenter implements MainMVP.Presenter {
     @Override
     public void addNewTask() {
         String description = view.getTaskDescription();
-        String date = SimpleDateFormat.getDateInstance().format(new Date());
+        String date = SimpleDateFormat.getDateTimeInstance().format(new Date());
 
         TaskItem task = new TaskItem(description, date);
         model.saveTask(task);

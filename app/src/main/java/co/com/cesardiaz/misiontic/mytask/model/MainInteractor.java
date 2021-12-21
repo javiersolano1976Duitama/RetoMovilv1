@@ -18,7 +18,7 @@ public class MainInteractor implements MainMVP.Model {
 
     @Override
     public List<TaskItem> getTasks() {
-        return tempItems;
+        return new ArrayList<>(tempItems);
     }
 
     @Override
