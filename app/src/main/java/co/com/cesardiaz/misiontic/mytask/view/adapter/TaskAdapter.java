@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import co.com.cesardiaz.misiontic.mytask.R;
 import co.com.cesardiaz.misiontic.mytask.view.dto.TaskItem;
+import co.com.cesardiaz.misiontic.mytask.view.dto.TaskState;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private List<TaskItem> data;
@@ -38,8 +40,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_task, parent, false);
-
-        return new ViewHolder(view);
+       return new ViewHolder(view);
     }
 
     @Override
@@ -47,6 +48,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         TaskItem item = data.get(position);
         holder.tvDescription.setText(item.getDescription());
         holder.tvDate.setText(item.getDate());
+        int color = item.getState()== TaskState.PENDING ? R.color.task_pending: R.color.task_done;
+
+        holder.ivIcon.setColorFilter(
+                ContextCompat.getColor(holder.itemView.getContext(), color),
+                android.graphics.PorterDuff.Mode.MULTIPLY);
+
     }
 
     @Override
